@@ -1,4 +1,4 @@
-# Contribution Guidelines
+gti # Contribution Guidelines
 This is a community-driven, open source project that welcomes all contributions. Whether you're a seasoned contributor or new to the project, we're grateful for all contributions. 
 
 ## Community standards 
