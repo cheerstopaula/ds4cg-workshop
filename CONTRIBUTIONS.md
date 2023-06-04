@@ -1,4 +1,4 @@
-gti # Contribution Guidelines
+# Contribution Guidelines
 This is a community-driven, open source project that welcomes all contributions. Whether you're a seasoned contributor or new to the project, we're grateful for all contributions. 
 
 ## Community standards 
@@ -24,7 +24,7 @@ Issues that are open for contribution are given the following labels:
 To contribute to the project, do the following:
 - [Fork and clone](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the repository
 - Create a [branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository) for your issue 
-- Make a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) to the master repository 
+- Make a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) to the main branch of the upstream repository
   - Title your pull request with the issue you fixed
     - For example, "Fixed upload error to resolve Issue #987"
   - Include a short description of the changes you made
