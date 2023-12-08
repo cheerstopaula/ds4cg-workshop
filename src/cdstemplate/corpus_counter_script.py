@@ -54,7 +54,7 @@ parser.add_argument(
 )
 
 
-# The entry point of your script - if a user runs it from the commane line, this is what will be run.
+# The entry point of your script - if a user runs it from the command line, this is what will be run.
 if __name__ == "__main__":
     args = parser.parse_args()
     utils.configure_logging()
