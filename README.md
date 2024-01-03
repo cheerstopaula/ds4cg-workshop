@@ -50,23 +50,23 @@ Collecting numpy
 ```
 
 ## Specifying Requirements
-In order for users to install your package and all the libraries it depends on by running `pip install`, you need to provide these files:
-- `setup.cfg`: List project metadata and version information and all library requirements/dependencies, including for testing or development environments. This is the main file you will work with and add requirements to.
-- `pyproject.toml`: Define the `[build-system]` settings so that the `setuptools` library is available in order to install your project. Many features of `pyproject.toml` are still experimental.
+In order for users to install your package and all the libraries it depends on by running `pip install`, you need to provide a `pyproject.toml` file. This has two important sections:
+- `project`: List project metadata and version information and all library requirements/dependencies, including for testing or development environments. This is the main file you will work with and add requirements to.
+- `build-system`: Define the build tool that is used to package and distribute your code. For this project, we use [SetupTools](https://setuptools.pypa.io/en/latest/userguide/quickstart.html), but we also recommend [Poetry](https://python-poetry.org/docs/).
 
-If you'd like to learn more about python packaging, refer to [`setuptools` Quickstart](https://setuptools.pypa.io/en/latest/userguide/quickstart.html),
-[the Python Packaging User Guide](https://packaging.python.org/en/latest/) or [PEP 517](https://peps.python.org/pep-0517/#build-requirements).
+If you'd like to learn more about python packaging, refer to [the Python Packaging User Guide](https://packaging.python.org/en/latest/) or [PEP 517](https://peps.python.org/pep-0517/#build-requirements).
 
 
 ## Directory Structure
 So what does each file in this repository do?
 ```
 .
-├── cdstemplate     # The python package root - Any code you'd like to be able to import lives here
-    ├── corpus_counter_script.py    # A script that takes a list of documents as input and outputs a CSV of word counts
-    ├── __init__.py     # Indicates that this directory is a python package, you can put special import instructions here
-    ├── word_count.py    # A module that has functions and classes to import
-    └── utils.py    # A module that handles logging and other internals
+├── src
+    ├── cdstemplate     # The python package root - Any code you'd like to be able to import lives here
+        ├── corpus_counter_script.py    # A script that takes a list of documents as input and outputs a CSV of word counts
+        ├── __init__.py     # Indicates that this directory is a python package, you can put special import instructions here
+        ├── word_count.py    # A module that has functions and classes to import
+        └── utils.py    # A module that handles logging and other internals
 ├── CHANGELOG.md    # Versioning information
 ├── dag_workflow.png    # An image that is linked to in this README
 ├── data    # Data files which may or may not be tracked in Git, but we reserve a folder for them so that users can all have the same relative paths
@@ -86,9 +86,8 @@ So what does each file in this repository do?
 ├── dvc.yaml    # Create the Data Version Control pipeline stages here
 ├── notebooks
     └── word_count_prototype.ipynb    # A jupyter notebook that makes pretty plots
-├── pyproject.toml    # The setuptools build tools are installed, so you project can be installed
+├── pyproject.toml    # Project metadata, dependencies and build tools are declared for proper installation and packaging.
 ├── README.md     # You're reading it now!
-├── setup.cfg   # Project metadata and dependencies are declared for proper installation
 └── tests
     └── test_word_count.py    # Unit and smoke tests for the word_count module
 ├── .dvc    # The configuration file for Data Version Control
@@ -147,26 +146,25 @@ In practice, you should write scripts that are flexible enough to change the par
 Our 'experiment' here is simply counting the occurrence of words from a set of documents, in the form of text files, then writing the counts of each word to a CSV file. This operation is made available to users via the `cdstemplate.corpus_counter_script` and by using the [`argparse` command-line parsing library](https://docs.python.org/3/library/argparse.html#module-argparse), we clearly describe the expected input parameters and options, which can be displayed using the `--help` flag. There are [other command-line parsers](https://realpython.com/comparing-python-command-line-parsing-libraries-argparse-docopt-click/) you can use, but `argparse` comes with python, so you don't need to add an extra requirement.
 
 
-Since we have made the package installable, users can run it using `python -m cdstemplate.corpus_counter_script` or `python cdstemplate/corpus_counter_script.py`, but both work the same way:
+Since we have made the package installable and defined it as the `corpus-counter` script in `project.toml`, users can run it using `corpus-counter`, `python -m cdstemplate.corpus_counter_script` or `python src/cdstemplate/corpus_counter_script.py`, but all work the same way:
 ```
-$ python cdstemplate/corpus_counter_script.py --help
-usage: corpus_counter_script.py [-h] [--case-insensitive]
-                                csv documents [documents ...]
+$ corpus-counter --help 
+usage: corpus-counter [-h] [--case-insensitive] csv documents [documents ...]
 
 A script to generate counts of tokens in a corpus
 
 positional arguments:
   csv                   Path to the output CSV storing token counts. Required.
-  documents             Paths to at least one raw text document that make up
-                        the corpus. Required.
+  documents             Paths to at least one raw text document that make up the corpus. Required.
 
 options:
   -h, --help            show this help message and exit
   --case-insensitive, -c
-                        Default is to have case sensitive tokenization. Use
-                        this flag to make the token counting case insensitive.
-                        Optional.
-
+                        Default is to have case sensitive tokenization. Use this flag to make the token counting
+                        case insensitive. Optional.
+$ python src/cdstemplate/corpus_counter_script.py --help
+usage: corpus_counter_script.py [-h] [--case-insensitive]
+...
 $ python -m cdstemplate.corpus_counter_script --help
 usage: corpus_counter_script.py [-h] [--case-insensitive]
                                 csv documents [documents ...]
@@ -177,10 +175,11 @@ A script to generate counts of tokens in a corpus
 
 Using the help message, we can understand how to run the script to count all the words in the text files in `data/gutenberg` in a case-insensitive way, saving word counts to a new csv file, `data/gutenberg_counts.csv`:
 ```
-$ python cdstemplate/corpus_counter_script.py data/gutenberg_counts.csv data/gutenberg/*.txt --case-insensitive
-INFO : 2022-05-20 17:45:30,540 : __main__ : Command line arguments: Namespace(csv='data/gutenberg_counts.csv', documents=['data/gutenberg/austen-emma.txt', 'data/gutenberg/austen-persuasion.txt', 'data/gutenberg/austen-sense.txt', 'data/gutenberg/bible-kjv.txt', 'data/gutenberg/blake-poems.txt', 'data/gutenberg/bryant-stories.txt', 'data/gutenberg/burgess-busterbrown.txt', 'data/gutenberg/carroll-alice.txt', 'data/gutenberg/chesterton-ball.txt', 'data/gutenberg/chesterton-brown.txt', 'data/gutenberg/chesterton-thursday.txt'], case_insensitive=True)
-INFO : 2022-05-20 17:45:30,540 : __main__ : Tokenizing document number 0: data/gutenberg/austen-emma.txt
-DEBUG : 2022-05-20 17:45:30,540 : cdstemplate.sample_module : Tokenizing '[Emma by Jane Austen 1816]
+$ corpus-counter data/gutenberg_counts.csv data/gutenberg/*.txt --case-insensitive
+INFO : 2023-12-08 12:26:10,770 : cdstemplate.corpus_counter_script : Command line arguments: Namespace(csv='data/gutenberg_counts.csv', documents=['data/gutenberg/austen-emma.txt', 'data/gutenberg/austen-persuasion.txt', 'data/gutenberg/austen-sense.txt', 'data/gutenberg/bible-kjv.txt', 'data/gutenberg/blake-poems.txt', 'data/gutenberg/bryant-stories.txt', 'data/gutenberg/burgess-busterbrown.txt', 'data/gutenberg/carroll-alice.txt', 'data/gutenberg/chesterton-ball.txt', 'data/gutenberg/chesterton-brown.txt', 'data/gutenberg/chesterton-thursday.txt'], case_insensitive=True)
+DEBUG : 2023-12-08 12:26:10,771 : cdstemplate.word_count : CorpusCounter instantiated, tokenization pattern: \s, case insensitive: True
+INFO : 2023-12-08 12:26:10,771 : cdstemplate.corpus_counter_script : Tokenizing document number 0: data/gutenberg/austen-emma.txt
+DEBUG : 2023-12-08 12:26:10,771 : cdstemplate.word_count : Tokenizing '[Emma by Jane Austen 1816]
 ...
 ```
 

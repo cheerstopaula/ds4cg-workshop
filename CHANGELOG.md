@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 You should also add project tags for each release in Github, see [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
 ## [Unreleased]
+### Added
 - Added example auto-built Sphinx documentation in the `docs` folder
+### Changed
+- All build and packaging switched to use only pyproject.toml
+- Minimum python version changed to 3.10
+### Removed
+- Removed setup.cfg
+
 ## [1.0.0] - 2022-05-23
 ### Added
 - README and CHANGELOG
