@@ -48,7 +48,7 @@ def test_corpus_counter_init():
     cc = word_count.CorpusCounter()
     assert cc.doc_counter == 0
     assert cc.get_token_count("word") == 0
-    assert cc.case_insensitive == False
+    assert not cc.case_insensitive
     assert cc.tokenization_pattern == r"\s"
 
 
