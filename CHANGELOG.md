@@ -9,6 +9,7 @@ You should also add project tags for each release in Github, see [Managing relea
 ## [Unreleased]
 ### Added
 - Added example auto-built Sphinx documentation in the `docs` folder
+- Github workflow for running ruff linter
 ### Changed
 - All build and packaging switched to use only pyproject.toml
 - Minimum python version changed to 3.10
