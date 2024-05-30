@@ -101,6 +101,19 @@ class CorpusCounter:
         )
         dataframe = dataframe.sort_values("token")
         return dataframe
+    
+    def get_token_probabilities_as_dataframe(self):
+        """Returns the token probabilities of the corpus as a Pandas DataFrame with columns 'token', 'probability'
+        """
+        df=self.get_token_counts_as_dataframe()
+        total_tokens=df["count"].sum()
+            
+        dataframe = pd.DataFrame.from_records(
+            list(self.token_counter.items()), columns=["token", "probability"]
+        )
+        dataframe = dataframe.sort_values("token")
+        dataframe["probability"]=dataframe["probability"].div(total_tokens)
+        return dataframe
 
     def save_token_counts(self, csv_file):
         """Saves the counts of tokens the corpus to a specified

@@ -103,3 +103,9 @@ def test_corpus_counter_save_csv(tmp_path):
     assert my_csv.is_file()
     expected_csv = "token,count\na,2\nb,1\nc,1\nx,1\ny,1\nz,1\n"
     assert my_csv.read_text() == expected_csv
+
+def test_token_probabilities_to_dataframe():
+    cc = word_count.CorpusCounter()
+    cc.add_doc("A a B b b b b b")
+    dataframe = cc.get_token_probabilities_as_dataframe()
+    assert dataframe["probability"].sum()==1
